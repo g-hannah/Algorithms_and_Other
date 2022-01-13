@@ -16,7 +16,6 @@
 </br>
 
 **Why is the program vulnerable to exploitation?**
-
 </br>
 </br>
 scanf() is a vulnerable function, as it will continue reading data from stdin stream until a newline is reached.
@@ -66,37 +65,36 @@ the same privileges as the vulnerable program ("privilege escalation").
    1044c:       e3409001        movt    r9, #1		    ; 0x11652
    10450:       e3a04000        mov     r4, #0
    10454:       ea000005        b       10470 <main+0x98>
+   
+   ==================================== Start of loop ====================================
    10458:       e4d52001        ldrb    r2, [r5], #1              ; r2 = *r5++ (dereference r5 and get character; then increment address)
    1045c:       e1a01007        mov     r1, r7                    ; address of format string (probably "%c ")
    10460:       e3a00001        mov     r0, #1                    ; stdout
    10464:       ebffffd5        bl      103c0 <__printf_chk@plt>
-   10468:       e356000f        cmp     r6, #15
+   10468:       e356000f        cmp     r6, #15                   ; does r6 == 15?
    1046c:       0a00000b        beq     104a0 <main+0xc8>
    10470:       e28d0008        add     r0, sp, #8            ; r0 = base address of stack buffer
    10474:       ebffffcb        bl      103a8 <strlen@plt>
    10478:       e1500004        cmp     r0, r4                ; is the length 0?
    1047c:       9a00000e        bls     104bc <main+0xe4>
 
-==== here is where a loop begins. r4 is at 0, and this
-does r6 = r4 & 0x000f
-
-   10480:       e214600f        ands    r6, r4, #15
-   10484:       e2844001        add     r4, r4, #1
-   10488:       1afffff2        bne     10458 <main+0x80>
+   10480:       e214600f        ands    r6, r4, #15             ; r6 = r4 & 0x000000ff
+   10484:       e2844001        add     r4, r4, #1              ; ++r4
+   10488:       1afffff2        bne     10458 <main+0x80>       ; if result is non-zero of the ands, go to start of loop
    1048c:       e1a02005        mov     r2, r5
    10490:       e1a01008        mov     r1, r8
-   10494:       e3a00001        mov     r0, #1
+   10494:       e3a00001        mov     r0, #1                  ; stdout
    10498:       ebffffc8        bl      103c0 <__printf_chk@plt>
    1049c:       eaffffed        b       10458 <main+0x80>
 
    104a0:       e1a01009        mov     r1, r9
-   104a4:       e3a00001        mov     r0, #1
+   104a4:       e3a00001        mov     r0, #1                  ; stdout
 
-   104a8:       ebffffc4        bl      103c0 <__printf_chk@plt>
-   104ac:       e28d0008        add     r0, sp, #8
+   104a8:       ebffffc4        bl      103c0 <__printf_chk@plt>    ; prompt user
+   104ac:       e28d0008        add     r0, sp, #8                  ; r0 = base address of stack buffer
    104b0:       ebffffbc        bl      103a8 <strlen@plt>
-   104b4:       e1500004        cmp     r0, r4
-   104b8:       8afffff0        bhi     10480 <main+0xa8>
+   104b4:       e1500004        cmp     r0, r4                      ; compare result with value in r4
+   104b8:       8afffff0        bhi     10480 <main+0xa8>           ; if (unsigned int)r4 > (unsigned int)r0
 
    104bc:       e300164c        movw    r1, #1612                   ; 0x64c
    104c0:       e3a00001        mov     r0, #1                      ; stdout
