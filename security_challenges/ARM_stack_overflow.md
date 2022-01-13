@@ -5,7 +5,7 @@ Overview of code mechanics:
 3. Store the character 'y' at location (sp + 7);
 4. Call (f)printf() to prompt the user for input;
 5. scanf() is called, with the address of some format string, and the destination for writing input data at (sp + 8);
-  - This means the buffer on the stack for storing the user's input data is 132 bytes in length
+    - This means the buffer on the stack for storing the user's input data is 132 bytes in length
 6. Print this data to stdout, one character at a time;
 7. Prompt the user and ask if they would like to input more data, reading a character from stdin;
 8. Go to 4 if the user wishes to input more data;
