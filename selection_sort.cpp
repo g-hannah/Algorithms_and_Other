@@ -1,6 +1,11 @@
 #include <iostream>
 #include <climits>
  
+/**
+ * Implementation of selection sort in C++.
+ *
+ * Sort an array of integers in ascending order.
+ */
  void
  selection_sort(int arr[], const int len)
  {
