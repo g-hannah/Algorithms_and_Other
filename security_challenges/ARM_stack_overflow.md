@@ -1,3 +1,16 @@
+This security challenge was to inspect an ELF binary that was compiled for an ARM processor. There was no access
+to the original source code and address space layout randomisation (ASLR) was used. In addition, full RELRO
+was in force for the binary (read-only relocations), which means entries in the global offset table and
+procedure linkage table cannot be overwritten.
+
+When the binary is run, the user is prompted for some data that the program will then dump to standard output.
+When dumping the data to stdout, the base address of the stack buffer was included at the start of the line,
+which therefore provided the means of overcoming ASLR in this challenge.
+
+The calling convention in ARM is to pass arguments to functions in registers (and not on the stack, as with
+the cdecl Intel calling convention). Arguments are passed in registers r1, r2, r3... The return value of a
+function is stored in r0.
+
 **Overview of code mechanics of the vulnerable program**
 </br>
 </br>
@@ -117,3 +130,16 @@ the same privileges as the vulnerable program ("privilege escalation").
    104f8:       e28dd08c        add     sp, sp, #140    ; sp will be pointing at where r4 is stored on the stack
    104fc:       e8bd8ff0        pop     {r4, r5, r6, r7, r8, r9, sl, fp, pc}
    ```
+
+In order to exploit this vulnerability, pwntools was used, which is a powerful python module with many capabilities.
+For example, shellcode for a target architecture can be produced easily, padding can be added (e.g. a NOP slide),
+and it has its builtin struct packing, which will pack the data in the right way given the context data it has on
+the target binary (little / big endian, etc).
+
+Given that the binary leaked the base address of the stack buffer when dumping the user's input data, this challenge
+is very basic and simple to complete. Using pwntools, the a process object is created with the target binary running,
+output from the binary is read in, the base address of the stack parsed, and the payload (complete with the correct
+stack address) is sent as input. The buffer is overflowed and the offset on the stack where the saved value for the
+link register (later popped into the program counter) is overwritten with an address that points to our NOP slide in
+the payload. The main() function epilogue is executed and the stack address is placed into the pc, and thus the
+shellcode is executed, spawning a shell with the higher privileges required to read the flag from the password file.
