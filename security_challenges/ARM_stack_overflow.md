@@ -1,7 +1,7 @@
-Overview of code mechanics:
+`Overview of code mechanics of the vulnerable program`
 
 1. Set up the stack frame, saving certain registers' values and then decrementing 140 from stack pointer;
-2. Call setvbuf() to change the standard output (stdout) stream to unbuffered [ setvbuf(stdout, NULL, _IONBF, 0); ];
+2. Call setvbuf() to change the standard output (stdout) stream to unbuffered [ `setvbuf(stdout, NULL, _IONBF, 0);` ];
 3. Store the character 'y' at location (sp + 7);
 4. Call (f)printf() to prompt the user for input;
 5. scanf() is called, with the address of some format string, and the destination for writing input data at (sp + 8);
@@ -11,7 +11,7 @@ Overview of code mechanics:
 8. Go to 4 if the user wishes to input more data;
 9. Otherwise, unwind the stack frame and return from main()
 
-`What is the vulnerability?`
+`Why is the program vulnerable to exploitation?`
 
 scanf() is a vulnerable function, as it will continue reading data from stdin stream until a newline is reached.
 This means a malicious user can easily overflow the buffer. When the stack is unwound at the end of the function,
