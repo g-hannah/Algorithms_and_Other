@@ -41,7 +41,10 @@
 
      for (int i = 0; i < len; ++i)
      {
-         std::cerr << " " << arr[i] << " ";
+         if (0 == i)
+            std::cerr << arr[i];
+         else
+            std::cerr << ", " << arr[i];
      }
 
      std::cerr << " ]" << std::endl;
