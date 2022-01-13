@@ -1,3 +1,3 @@
-A repository of various algorithms, data structures, and other stuff implemented in different languages.
-
-The languages that will be used mostly are C++ and C, and probably some assembly language (Intel and ARM).
+This repository contains, or will contain, various fragments of code of various algorithms,
+data structures, and protocol implementations. These will mostly be written in C++, C, and
+Java, and some small fragments will probably be written in assembly (Intel and ARM).
