@@ -15,7 +15,7 @@
 
      while (start_position < len - 1)
      {
-         for (int i = start_position; i < len; ++i)
+         for (int i = min_idx = start_position; i < len; ++i)
          {
              if (arr[i] < min_value)
              {
