@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 #include <climits>
  
@@ -64,6 +65,9 @@ int main()
     int arr2[] = { INT_MAX, 0x7fffffff, 0x30000000, 123456, 0, -0x30000000, -0x7fffffff, INT_MIN };
     int arr2_expected[] = { INT_MIN, -0x7fffffff, -0x30000000, 0, 123456, 0x30000000, 0x7fffffff, INT_MAX };
 
+ /*
+  * Introduced in C++11
+  */
     std::function<bool(int[],int[],int,int)> are_equal = [](int arr1[], int arr2[], int l1, int l2){
 
         if (l1 != l2)
