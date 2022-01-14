@@ -1,26 +1,22 @@
 **Challenge Overview**
 
 In this challenge, the user is prompted by the program to enter shellcode that
-the program will then execute. Two major obstacles must be overcome in order
-to do this. The first obstacle is the limited subset of syscalls that are
-permitted (and hence, this challenge is a sandbox challenge). The second is the
-size limitation on the size of the shellcode that can be input.
+the program will then execute. There are several aspects of the challenge that
+slightly increase the complexity. First of all, the system calls that we can
+use in our shellcode are limited to a restricted subset, and therefore our shellcode
+is executing within a sandbox. Secondly, the size of the shellcode that the program
+will accept is limited to 50 bytes. A third aspect of the challenge increases the
+effectiveness of the second limitation, which is that the file with the flag has
+a new randoms sequence of characters appended to it everytime we run the program.
+Thus, our shellcode cannot be as simple as opening a known filename and printing
+its contents to standard output; we must open the directory and get the filename
+from the directory entry first. This therefore means our shellcode will not fit within
+a 50 byte limit.
 
-We need to gain access to the flag in the password file; however, everytime the
-vulnerable program is run, a random sequence of characters is appended to the flag
-filename, `flag_<random charseq>`, which uses a strong cryptographically secure
-source of randomness, namely /dev/urandom. This file is in the directory 'flag',
-the contents of which we cannot see with our permissions. This necessitates creating
-shellcode that is not as simple as simply opening a known filename and printing the
-contents to standard output. We must open the directory and then read the filename
-from its directory entry. Thankfully, this is at least simplified by the fact this
-is the only file within the directory.
-
-All of this means the shellcode necessary to complete the challenge is a lot
-longer than the limit, which is 50 bytes.
-
-We can read the contents of the shell script that is automatically run when
-we start the vulnerable program:
+Below is the shell script that is run everytime the sandbox program is run. As can be
+seen, a random sequence of bytes is taken from `/dev/urandom` and trimmed to output
+only characters in a given subset, with 32 such characters being appended to the flag
+filename:
 
 ```
 #!/bin/sh
@@ -40,7 +36,8 @@ chmod 500 flag/
 timeout -k 2m 1m ./challenge-sandbox ./vuln
 ```
 
-We are only permitted to use the following system calls:
+The sandbox that will execute our code has limited our system calls to a subset,
+which are listed below:
 
 `read, write, exit, brk, mmap, access, open, fstat, close, mprotect,
 munmap, arch_prctl, exit_group, getdents`
