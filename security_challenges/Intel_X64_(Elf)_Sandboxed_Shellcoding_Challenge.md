@@ -58,7 +58,7 @@ All of this uses only the restricted subset of system calls in the sandbox.
 
 **Phase one of our exploit**
 
-  - _Open file with phase two_
+  - _Open file containing shellcode for phase two_
   - _Map the contents into memory, with the permission set
     (PROT_READ|PROT_WRITE|PROT_EXEC)_
   - _Pass execution to it_
