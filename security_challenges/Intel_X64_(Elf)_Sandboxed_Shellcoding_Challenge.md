@@ -187,3 +187,12 @@ _start:
 	pop %rax
 	syscall
 ```
+
+The shellcode for phase II of the exploit was stored in /tmp/sc. A longer and less easily guessed
+filename could not be used due to the size limitation (however, the file only existed for a very
+short period of time and then shredded). This value was moved as an immediate value (0x2f746d702f7363)
+into the %rdi register and then pushed onto the stack. The stack address was then passed as a pointer
+to the open function. The system call mmap() was then called with the file descriptor of this open
+file as argument, as well as the flags necessary to make the memory mapped region executable. The
+address of this was return in %rax, and thus immediately after executing this system call, we do a
+`.jmp *%rax', which passes execution to phase II of our exploit.
