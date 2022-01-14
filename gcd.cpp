@@ -32,11 +32,11 @@
 
     Algorithm:
 
-    1. r == a % b
+    1. r := a % b
     2. if r is 0, return abs(b)
-    3. a = b
-    4. b = r
-    5. go to 1
+    3. a := b
+    4. b := r
+    5. go to 1 (recursively call gcd(b, r))
 
 
     Example:
