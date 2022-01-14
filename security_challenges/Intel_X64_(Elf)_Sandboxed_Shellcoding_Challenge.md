@@ -190,7 +190,7 @@ _start:
 
 The shellcode for phase II of the exploit was stored in /tmp/sc. A longer and less easily guessed
 filename could not be used due to the size limitation (however, the file only existed for a very
-short period of time and then shredded). This value was moved as an immediate value (0x2f746d702f7363)
+short period of time and then shredded). This value was moved as an immediate value (0x63732f706d742f)
 into the %rdi register and then pushed onto the stack. The stack address was then passed as a pointer
 to the open function. The system call mmap() was then called with the file descriptor of this open
 file as argument, as well as the flags necessary to make the memory mapped region executable. The
