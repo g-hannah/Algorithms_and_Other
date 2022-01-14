@@ -10,7 +10,7 @@
     The greatest common divisor, 'd', of a and b is also
     the greatest common divisor of b and (a % b):
 
-    if d | a and d | b, then d | (a & b)
+    if d | a and d | b, then d | (a % b)
 
     gcd(a, b) == gcd(b, (a % b))
 
