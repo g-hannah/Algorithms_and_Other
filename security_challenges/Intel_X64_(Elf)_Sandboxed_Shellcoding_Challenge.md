@@ -8,7 +8,7 @@ size limitation on the size of the shellcode that can be input.
 
 We need to gain access to the flag in the password file; however, everytime the
 vulnerable program is run, a random sequence of characters is appended to the flag
-filename, `.flag_<random charseq>`, which uses a strong cryptographically secure
+filename, `flag_<random charseq>`, which uses a strong cryptographically secure
 source of randomness, namely /dev/urandom. This file is in the directory 'flag',
 the contents of which we cannot see with our permissions. This necessitates creating
 shellcode that is not as simple as simply opening a known filename and printing the
