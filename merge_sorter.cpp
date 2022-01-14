@@ -1,5 +1,6 @@
 #include "MergeSorter.h"
 #include <iostream>
+#include <cstring>
 
 MergeSorter::MergeSorter()
 {
@@ -70,8 +71,7 @@ void MergeSorter::sort(int arr[], const int left, const int right)
      * Now overwrite subsegment [left:right] with
      * the sorted values in tmp[]
      */
-    for (i = left, k = 0; i < right && k < diff; ++i, ++k)
-        arr[i] = tmp[k];
+    std::memcpy(arr + left, tmp, diff * sizeof(int));
 
     return;
 }
