@@ -37,9 +37,7 @@ void MergeSorter::sort(int arr[], const int left, const int right)
     /*
      * Recursively call sort() on subsegments
      */
-    //std::cerr << "splitting array from " << left << " to " << mid << std::endl;
     sort(arr, left, mid);
-    //std::cerr << "splitting array from " << mid << " to " << right << std::endl;
     sort(arr, mid, right);
 
     /*
@@ -48,7 +46,6 @@ void MergeSorter::sort(int arr[], const int left, const int right)
     int tmp[diff];
     int k = 0, i = left, j = mid;
 
-    //std::cerr << "merging segments [" << left << ":" << mid << "] and [" << mid << ":" << right << "]" << std::endl;
     for ( ; i < mid && j < right; )
     {
         if (arr[j] < arr[i])
