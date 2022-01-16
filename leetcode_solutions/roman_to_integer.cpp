@@ -51,8 +51,10 @@ private:
     
     /*
       Helper method to convert from char to index into array
+      
+      Make inline to try and speed things up
      */
-    int _idx(char c)
+    inline int _idx(char c)
     {
         return (int)(c - 0x41);
     }
