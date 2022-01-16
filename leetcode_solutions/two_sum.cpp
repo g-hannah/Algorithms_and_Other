@@ -30,7 +30,21 @@ public:
     {
         std::vector<int> ret;
         std::map<int,int> map;
-        
+        /*
+           Do a single pass over the input array to both
+           insert into the map and also check if the
+           solution already exists, at which point stop.
+           
+           The mapping is (target - nums[i]) -> i
+           
+           Therefore, the key is the number required to
+           add to nums[i] to make 'target'. Thus, we can
+           for each element in the array check if there
+           is a mapping for that value. If so, the index
+           stored there is the index of the number to add
+           to sum to target. Return the current index
+           and the index mapped to.
+         */
         for (int i = 0; i < nums.size(); ++i)
         {
             const miter other = map.find(nums.at(i));
