@@ -33,11 +33,6 @@ public:
         
         for (int i = 0; i < nums.size(); ++i)
         {
-            map.insert(pair<int,int>(target - nums.at(i), i));
-        }
-        
-        for (int i = 0; i < nums.size(); ++i)
-        {
             const miter other = map.find(nums.at(i));
             if (map.end() != other && i != other->second)
             {
@@ -46,8 +41,9 @@ public:
                 
                 return ret;
             }
+            map.insert(pair<int,int>(target - nums.at(i), i));
         }
-        
+
         return ret;
     }
 };
