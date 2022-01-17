@@ -1,3 +1,9 @@
+/*
+
+	A hash bucket implementation in C, written by Gary Hannah.
+
+ */
+
 #include <assert.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -7,7 +13,6 @@
 #include <stdio.h>
 #include "hash_bucket.h"
 
-//#define HASHING_PRIME 1610612741u
 #define ALIGN_SIZE(s) (((s) + 0xf) & ~(0xf))
 
 #define BUCKET(h, n) ((h)%(n))
@@ -32,22 +37,6 @@ Log(char *fmt, ...)
 
 	return;
 }
-
-/*
-static void
-rotate_byte_left(char *c, int amount)
-{
-	unsigned char uc = (unsigned char)*c;
-
-	if (amount == sizeof(c))
-		return;
-
-	uc = ((uc << amount) | (uc >> (sizeof(c) - amount)));
-	*c = (char)uc;
-
-	return;
-}
-*/
 
 #define GOLDEN_RATIO32 2654435769u
 static uint32_t
@@ -543,6 +532,14 @@ BUCKET_clear_bucket(bucket_obj_t *bucket_obj, char *key, int flags)
 	return;
 }
 
+/**
+ * Register a callback that should be called when a
+ * bucket object is being destroyed.
+ *
+ * @param bucket_obj - Bucket object
+ * @param cb - a function pointer
+ * @returns nothing
+ */
 void
 BUCKET_register_callback(bucket_obj_t *bucket_obj, BUCKET_cb_t cb)
 {
