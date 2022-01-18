@@ -33,7 +33,7 @@ class Solution
 private:
     char ret[200];
 public:
-     string longestCommonPrefix_VerticalScan(vector<string>& strs)
+    string longestCommonPrefix_VerticalScan(vector<string>& strs)
     {
         const size_t vlen = strs.size();
         if (0 == vlen)
