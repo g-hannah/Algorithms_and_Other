@@ -30,8 +30,7 @@ public:
             {
                 if (s.at(p) != ret[p])
                 {
-                    cerr << s.at(p) << " != " << ret[p] << endl;
-                    if (1 == p)
+                    if (0 == p)
                     {
                         return "";
                     }
