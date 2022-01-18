@@ -33,7 +33,32 @@ class Solution
 private:
     char ret[200];
 public:
-    string longestCommonPrefix(vector<string>& strs)
+     string longestCommonPrefix_VerticalScan(vector<string>& strs)
+    {
+        const size_t vlen = strs.size();
+        if (0 == vlen)
+            return "";
+
+        if (1 == vlen)
+            return strs[0];
+
+        for (int i = 0, n = strs[0].length(); i < n; ++i)
+        {
+            const string s = strs[0];
+            const char c = s.at(i);
+
+            for (int j = 1, k = vlen; j < k; ++j)
+            {
+                const string other = strs[j];
+                if (i == other.length() || c != other.at(i))
+                    return s.substr(0,i);
+            }
+        }
+
+        return strs[0];
+    }
+ 
+    string longestCommonPrefix_HorizontalScan(vector<string>& strs)
     {
         if (1 == strs.size())
             return strs[0];
