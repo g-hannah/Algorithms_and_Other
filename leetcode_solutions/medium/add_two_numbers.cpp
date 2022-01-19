@@ -16,7 +16,7 @@ public:
         int val = 0, carry = 0;
         ListNode *node = new ListNode(), *tmp;
 
-        for (tmp = node; l1 && l2; d *= 10; )
+        for (tmp = node; l1 && l2; )
         {
             val = l1->val + l2->val + carry;
             carry = val / 10;
