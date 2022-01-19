@@ -46,6 +46,9 @@ public:
             tmp->val = val % 10;
             l2 = l2->next;
         }
+        
+        if (carry)
+            tmp->next = new ListNode(carry);
 
         return node;
     }
