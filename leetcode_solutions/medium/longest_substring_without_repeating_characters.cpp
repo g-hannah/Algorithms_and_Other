@@ -1,6 +1,14 @@
+#include <unordered_set>
+#include <iostream>
+
+using namespace std;
+
 class Solution
 {
-    set<char> cs;
+    /*
+        O(1) insertion and lookup
+     */
+    unordered_set<char> cs;
 public:
     int lengthOfLongestSubstring(string s)
     {
